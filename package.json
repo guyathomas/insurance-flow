@@ -5,7 +5,10 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "yarn workspace @guyathomas/nf-client dev"
+    "dev": "lerna run dev --parallel",
+    "build": "lerna run build"
   },
-  "dependencies": {}
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  }
 }
