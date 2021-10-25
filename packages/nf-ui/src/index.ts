@@ -110,6 +110,7 @@ export { TextLink } from './components/text-link';
 export { Textarea } from './components/textarea';
 export { Title } from './components/title';
 export { Tooltip } from './components/tooltip';
+export { Workflow } from './components/workflow';
 export { UploadedFile } from './components/uploaded-file';
 
 // formatters
