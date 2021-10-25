@@ -1,7 +1,2 @@
-.now
-.next
-.env*.local
-node_modules
-.DS_Store
-.vercel
-.npmrc
+node_modules/
+.next/
