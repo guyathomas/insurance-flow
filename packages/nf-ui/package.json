@@ -19,6 +19,7 @@
   "dependencies": {
     "@reach/rect": "^0.10.3",
     "@types/react-image-fallback": "^8.0.1",
+    "ajv": "^8.6.3",
     "camel-case": "^4.1.1",
     "change-case": "^4.1.1",
     "classnames": "^2.2.6",
