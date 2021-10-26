@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
+import { SomeJTDSchemaType, Step } from '@guyathomas/nf-common/lib/types';
 import { Title } from '../title';
 import { Button } from '../button';
 import { useAxios, Request } from '../../hooks/axios';
@@ -26,9 +27,7 @@ interface WorkflowProps {
 
 export const Workflow: React.FC<WorkflowProps> = ({ schemaUrl }) => {
   const router = useRouter();
-  // TODO: Fix any
-  // eslint-disable-next-line
-  const { data, loading, error } = useStepData<any>(schemaUrl);
+  const { data, loading, error } = useStepData<Step<SomeJTDSchemaType>>(schemaUrl);
 
   if (loading || !data?.pageTitle) return <div>Loading</div>;
   if (error) {

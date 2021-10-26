@@ -17,6 +17,7 @@
     "compile": "yarn build"
   },
   "dependencies": {
+    "@guyathomas/nf-common": "1.0.0",
     "@reach/rect": "^0.10.3",
     "@types/react-image-fallback": "^8.0.1",
     "ajv": "^8.6.3",

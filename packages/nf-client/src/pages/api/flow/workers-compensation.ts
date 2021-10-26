@@ -1,4 +1,4 @@
-import { WorkersCompensationSteps, WorkersCompensationStepMapper } from 'types/flows/workers-compensation';
+import { WorkersCompensationSteps, WorkersCompensationStepMapper, ValueOf } from '@guyathomas/nf-common/lib/types';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const stepMapper: WorkersCompensationStepMapper = {
@@ -32,7 +32,6 @@ const stepMapper: WorkersCompensationStepMapper = {
     },
   },
 };
-type ValueOf<T> = T[keyof T];
 
 /*
 Express always returns a string, or string array type. This is useful for when we are sure that we just want 1 element
