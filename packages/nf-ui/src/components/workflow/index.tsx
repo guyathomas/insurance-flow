@@ -1,9 +1,13 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { SomeJTDSchemaType, Step } from '@guyathomas/nf-common/lib/types';
+import { SomeJTDSchemaType, Step, FieldProperties } from '@guyathomas/nf-common/lib/types';
+import { Input } from '../input';
+import { Field } from '../field';
+import sortBy from 'lodash/sortBy';
 import { Title } from '../title';
 import { Button } from '../button';
 import { useAxios, Request } from '../../hooks/axios';
+
 
 function useStepData<T>(url: string): Request<T> {
   const router = useRouter();
@@ -25,9 +29,52 @@ interface WorkflowProps {
   schemaUrl: string;
 }
 
+interface FieldProps {
+  name: string;
+  properties: FieldProperties;
+}
+const makeFieldProperties = (schemaProperties = {}): FieldProps[] =>
+  Object.entries(schemaProperties).map(([name, properties]: [string, FieldProps['properties']]) => ({
+    name,
+    properties,
+  }));
+
+const getOrderedFieldProps = (schema?: SomeJTDSchemaType): FieldProps[] => {
+  if (!schema) return [];
+  if ('properties' in schema || 'optionalProperties' in schema) {
+    return sortBy(
+      [...makeFieldProperties(schema.properties), ...makeFieldProperties(schema.additionalProperties)],
+      'properties.metadata.order',
+    );
+  }
+  return [];
+};
+
+interface GenericFieldProps {
+  fieldId: string;
+  name: string;
+  [key: string]: any;
+}
+/* eslint-disable react/jsx-props-no-spreading */
+const componentMap: { [key in FieldProperties['type']]: React.FC<GenericFieldProps> } = {
+  float32: (props) => <Input type="number" {...props} />,
+  float64: (props) => <Input type="number" {...props} />,
+  int8: (props) => <Input type="number" {...props} />,
+  uint8: (props) => <Input type="number" {...props} />,
+  int16: (props) => <Input type="number" {...props} />,
+  uint16: (props) => <Input type="number" {...props} />,
+  int32: (props) => <Input type="number" {...props} />,
+  uint32: (props) => <Input type="number" {...props} />,
+  string: (props) => <Input type="text" {...props} />,
+  timestamp: (props) => <Input type="date" {...props} />,
+};
+/* eslint-enable react/jsx-props-no-spreading */
+
 export const Workflow: React.FC<WorkflowProps> = ({ schemaUrl }) => {
   const router = useRouter();
   const { data, loading, error } = useStepData<Step<SomeJTDSchemaType>>(schemaUrl);
+
+  const fieldProps = React.useMemo(() => getOrderedFieldProps(data?.schema), [data?.schema]);
 
   if (loading || !data?.pageTitle) return <div>Loading</div>;
   if (error) {
@@ -41,6 +88,20 @@ export const Workflow: React.FC<WorkflowProps> = ({ schemaUrl }) => {
   return (
     <div>
       <Title>{data.pageTitle}</Title>
+      {fieldProps.map(({ name, properties }) => {
+        const Component = componentMap[properties.type];
+        return (
+          <Field fieldId={name} label={properties.metadata.label}>
+            <Component
+              fieldId={name}
+              name={name}
+              onChange={(event) => {
+                console.log(event);
+              }}
+            />
+          </Field>
+        );
+      })}
       {data.previous && (
         <Button
           onClick={() => {

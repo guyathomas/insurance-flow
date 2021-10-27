@@ -11,9 +11,9 @@ const stepMapper: WorkersCompensationStepMapper = {
     previous: null,
     schema: {
       properties: {
-        fullName: { type: 'string', metadata: { label: 'Full name' } },
-        phoneNumber: { type: 'string', metadata: { label: 'Role' } },
-        role: { type: 'string', metadata: { label: 'Phone number' } },
+        fullName: { type: 'string', metadata: { label: 'Full name', order: 1 } },
+        phoneNumber: { type: 'string', metadata: { label: 'Role', order: 2 } },
+        role: { type: 'string', metadata: { label: 'Phone number', order: 3 } },
       },
     },
   },
@@ -23,11 +23,14 @@ const stepMapper: WorkersCompensationStepMapper = {
     previous: WorkersCompensationSteps.CONTACT,
     schema: {
       properties: {
-        companyName: { type: 'string', metadata: { label: 'Company name' } },
-        FEIN: { type: 'string', metadata: { label: 'What is your Federal Employer Identification Number? (FEIN)' } },
-        yearInBusiness: { type: 'int32', metadata: { label: 'Years in business' } },
-        numberOfLocations: { type: 'int32', metadata: { label: 'Number of locations' } },
-        // statesOfOperation: { type: 'int32', metadata: { label: 'Number of locations' } },
+        companyName: { type: 'string', metadata: { label: 'Company name', order: 1 } },
+        FEIN: {
+          type: 'string',
+          metadata: { label: 'What is your Federal Employer Identification Number? (FEIN)', order: 2 },
+        },
+        yearInBusiness: { type: 'int32', metadata: { label: 'Years in business', order: 3 } },
+        numberOfLocations: { type: 'int32', metadata: { label: 'Number of locations', order: 4 } },
+        // statesOfOperation: { type: 'int32', metadata: { label: 'Number of locations', order: 1 } },
       },
     },
   },

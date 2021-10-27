@@ -2,4 +2,10 @@ export {
   WorkersCompensationStepMapper,
   WorkersCompensationSteps,
 } from "./workers-compensation";
-export type { SomeJTDSchemaType, ValueOf, Step } from "./common";
+export type {
+  SomeJTDSchemaType,
+  ValueOf,
+  Step,
+  FieldProperties,
+  FieldType,
+} from "./common";
