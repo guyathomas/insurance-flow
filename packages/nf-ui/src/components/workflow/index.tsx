@@ -1,13 +1,13 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { SomeJTDSchemaType, Step, FieldProperties } from '@guyathomas/nf-common/lib/types';
+import { Form, Formik } from 'formik';
 import { Input } from '../input';
 import { Field } from '../field';
 import sortBy from 'lodash/sortBy';
 import { Title } from '../title';
 import { Button } from '../button';
 import { useAxios, Request } from '../../hooks/axios';
-
 
 function useStepData<T>(url: string): Request<T> {
   const router = useRouter();
@@ -88,38 +88,45 @@ export const Workflow: React.FC<WorkflowProps> = ({ schemaUrl }) => {
   return (
     <div>
       <Title>{data.pageTitle}</Title>
-      {fieldProps.map(({ name, properties }) => {
-        const Component = componentMap[properties.type];
-        return (
-          <Field fieldId={name} label={properties.metadata.label}>
-            <Component
-              fieldId={name}
-              name={name}
-              onChange={(event) => {
-                console.log(event);
-              }}
-            />
-          </Field>
-        );
-      })}
-      {data.previous && (
-        <Button
-          onClick={() => {
-            router.push({ query: { step: data.previous } }, undefined, { shallow: true });
-          }}
-        >
-          Back
-        </Button>
-      )}
-      <Button
-        onClick={() => {
+      <Formik
+        onSubmit={(values) => {
+          console.log('Submitting', values);
           if (data.next) {
             router.push({ query: { step: data.next } }, undefined, { shallow: true });
           }
         }}
+        initialValues={{}}
       >
-        {data.next ? 'Next' : 'Finish'}
-      </Button>
+        {({ values, setFieldValue }) => (
+          <Form>
+            {fieldProps.map(({ name, properties }) => {
+              const Component = componentMap[properties.type];
+              return (
+                <Field fieldId={name} label={properties.metadata.label}>
+                  <Component
+                    fieldId={name}
+                    name={name}
+                    value={values[name]}
+                    onChange={(value) => {
+                      setFieldValue(name, value);
+                    }}
+                  />
+                </Field>
+              );
+            })}
+            {data.previous && (
+              <Button
+                onClick={() => {
+                  router.push({ query: { step: data.previous } }, undefined, { shallow: true });
+                }}
+              >
+                Back
+              </Button>
+            )}
+            <Button type="submit">{data.next ? 'Next' : 'Finish'}</Button>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };
