@@ -10,6 +10,8 @@ import { Title } from '../title';
 import { Button } from '../button';
 import { useAxios, Request } from '../../hooks/axios';
 import { AdvancedSelectInput } from '../select-input/components/advanced-select-input';
+import { CheckboxRow } from '../checkbox-row';
+import { Text } from '../text';
 
 const ajv = new Ajv({
   keywords: ['label', 'order'],
@@ -81,6 +83,7 @@ const componentMap: { [key in FieldProperties['type']]: React.FC<GenericFieldPro
   uint32: (props) => <Input type="number" {...props} />,
   string: (props) => <Input type="text" {...props} />,
   timestamp: (props) => <Input type="date" {...props} />,
+  boolean: (props) => <CheckboxRow label="" {...props} />,
 };
 /* eslint-enable react/jsx-props-no-spreading */
 
@@ -133,12 +136,38 @@ export const Workflow: React.FC<WorkflowProps> = ({ schemaUrl }) => {
           <Form>
             {fieldProps.map(({ name, properties }) => {
               const { metadata = {} } = properties;
-
               const Component = metadata.customField
                 ? customComponentMap[metadata.customField]
                 : componentMap[properties.type];
+              const fieldError = errors[name];
+              if (!Object.hasOwnProperty.call(values, name)) {
+                // Initialize the values to false when they don't exist
+                setFieldValue(name, false);
+              }
+              if (properties.type === 'boolean') {
+                return (
+                  <>
+                    {fieldError && (
+                      <Text color="error" size="small" data-testid={`field:error:${name}`}>
+                        {error}
+                      </Text>
+                    )}
+                    <CheckboxRow
+                      fieldId={name}
+                      name={name}
+                      label={metadata.label}
+                      isActive={values[name] || null}
+                      onClick={(value) => {
+                        setFieldValue(name, value);
+                      }}
+                      /* eslint-disable-next-line */
+                      {...(metadata.fieldProps || {})}
+                    />
+                  </>
+                );
+              }
               return (
-                <Field fieldId={name} label={metadata.label} error={errors[name]}>
+                <Field fieldId={name} label={metadata.label} error={fieldError}>
                   <Component
                     fieldId={name}
                     name={name}

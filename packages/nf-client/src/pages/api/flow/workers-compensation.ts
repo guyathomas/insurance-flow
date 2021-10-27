@@ -62,6 +62,50 @@ const stepMapper: WorkersCompensationStepMapper = {
       },
     },
   },
+  employees: {
+    pageTitle: 'Tell us about your employees',
+    next: WorkersCompensationSteps.PAY_PREFERENCES,
+    previous: WorkersCompensationSteps.COMPANY,
+    schema: {
+      properties: {
+        clinicName: {
+          type: 'string',
+          metadata: {
+            label: 'What’s the name of the clinic, physician, or ER used for work injuries?',
+            order: 1,
+          },
+        },
+        includeMedicalInsurance: {
+          type: 'boolean',
+          metadata: {
+            order: 3,
+            label: 'Do you provide group medical insurance?',
+          },
+        },
+        includeRetirementPlan: {
+          type: 'boolean',
+          metadata: {
+            order: 4,
+            label: 'Do you offer a retirement or pension plan?',
+          },
+        },
+        includePaidVacation: {
+          type: 'boolean',
+          metadata: {
+            order: 5,
+            label: 'Do you give paid vacation?',
+          },
+        },
+        paidVacationDetails: {
+          type: 'string',
+          metadata: {
+            order: 6,
+            label: 'Please provide details about the paid vacation',
+          },
+        },
+      },
+    },
+  },
 };
 
 /*

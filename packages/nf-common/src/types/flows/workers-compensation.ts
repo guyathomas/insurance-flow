@@ -13,6 +13,13 @@ interface CompanyFormValues {
   numberOfLocations: number;
   stateOfOperation: string[]
 }
+
+interface EmployeeFormValues {
+  clinicName: string;
+  includeMedicalInsurance: boolean;
+  includeRetirementPlan: boolean;
+  includePaidVacation: boolean;
+  paidVacationDetails: string;
 }
 
 export enum WorkersCompensationSteps {
@@ -26,4 +33,5 @@ export enum WorkersCompensationSteps {
 export type WorkersCompensationStepMapper = {
   [WorkersCompensationSteps.CONTACT]: Step<ContactFormValues>;
   [WorkersCompensationSteps.COMPANY]: Step<CompanyFormValues>;
+  [WorkersCompensationSteps.EMPLOYEES]: Step<EmployeeFormValues>;
 };

@@ -37,4 +37,4 @@ type NumberType =
   | "int32"
   | "uint32";
 type StringType = "string" | "timestamp";
-export type FieldType = NumberType | StringType;
+export type FieldType = NumberType | StringType | "boolean";
