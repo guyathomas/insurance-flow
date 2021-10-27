@@ -27,11 +27,20 @@ export enum WorkersCompensationSteps {
   COMPANY = "company",
   EMPLOYEES = "employees",
   PAY_PREFERENCES = "pay-preferences",
-  COMPLETE = "complete",
+}
+
+enum PayPreference {
+  NEWFRONT = "NEWFRONT",
+  DIRECT = "DIRECT",
+}
+
+interface PayPreferencesForm {
+  paymentRecipient: PayPreference;
 }
 
 export type WorkersCompensationStepMapper = {
   [WorkersCompensationSteps.CONTACT]: Step<ContactFormValues>;
   [WorkersCompensationSteps.COMPANY]: Step<CompanyFormValues>;
   [WorkersCompensationSteps.EMPLOYEES]: Step<EmployeeFormValues>;
+  [WorkersCompensationSteps.PAY_PREFERENCES]: Step<PayPreferencesForm>;
 };

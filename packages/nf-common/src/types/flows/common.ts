@@ -18,7 +18,7 @@ export interface FieldProperties {
   metadata: SchemaFieldMetadata;
 }
 
-export type CustomFieldName = 'advancedSelectInput';
+export type CustomFieldName = "advancedSelectInput" | "selectableRowGroup";
 interface SchemaFieldMetadata {
   label?: string;
   order?: number;

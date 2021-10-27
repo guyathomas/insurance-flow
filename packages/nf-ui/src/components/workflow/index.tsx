@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { SomeJTDSchemaType, Step, FieldProperties, CustomFieldName } from '@guyathomas/nf-common/lib/types';
-import { Form, Formik } from 'formik';
+import { Form, Formik, useFormikContext } from 'formik';
 import Ajv from 'ajv/dist/jtd';
 import { Input } from '../input';
 import { Field } from '../field';
@@ -12,9 +12,10 @@ import { useAxios, Request } from '../../hooks/axios';
 import { AdvancedSelectInput } from '../select-input/components/advanced-select-input';
 import { CheckboxRow } from '../checkbox-row';
 import { Text } from '../text';
+import { SelectableRow } from '../selectable-row';
 
 const ajv = new Ajv({
-  keywords: ['label', 'order'],
+  keywords: ['label', 'order', 'customField', 'fieldProps'],
   allErrors: true,
 });
 
@@ -65,11 +66,38 @@ interface GenericFieldProps {
   [key: string]: any;
 }
 
+interface SelectableRowGroup {
+  selectableRowsProps: (Parameters<typeof SelectableRow>[0] & { value: string })[];
+  name: string;
+}
+
+const SelectableRowGroup: React.FC<SelectableRowGroup> = ({ selectableRowsProps, name }) => {
+  const { setFieldValue, values } = useFormikContext();
+  return (
+    <div>
+      {selectableRowsProps.map((props) => (
+        <SelectableRow
+          // eslint-disable-next-line
+          {...props}
+          isSelected={values[name] === props.value}
+          onClick={() => {
+            setFieldValue(name, props.value);
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
 const customComponentMap: { [key in CustomFieldName]: React.FC<GenericFieldProps> } = {
   // eslint-disable-next-line
   // @ts-ignore
   // eslint-disable-next-line
   advancedSelectInput: (props) => <AdvancedSelectInput {...props} />,
+  // eslint-disable-next-line
+  // @ts-ignore
+  // eslint-disable-next-line
+  selectableRowGroup: (props) => <SelectableRowGroup {...props} />,
 };
 /* eslint-disable react/jsx-props-no-spreading */
 const componentMap: { [key in FieldProperties['type']]: React.FC<GenericFieldProps> } = {

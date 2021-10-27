@@ -106,6 +106,38 @@ const stepMapper: WorkersCompensationStepMapper = {
       },
     },
   },
+  'pay-preferences': {
+    next: null,
+    previous: WorkersCompensationSteps.EMPLOYEES,
+    pageTitle: 'How do you want to pay for your policy?',
+    schema: {
+      properties: {
+        paymentRecipient: {
+          enum: ['DIRECT', 'NEWFRONT'],
+          metadata: {
+            order: 1,
+            customField: 'selectableRowGroup',
+            fieldProps: {
+              selectableRowsProps: [
+                {
+                  title: 'I want to pay Newfront',
+                  subtitle:
+                    'You’ll pay Newfront instead of paying each insurance company separately. There are no fees.',
+                  value: 'NEWFRONT',
+                },
+                {
+                  title: 'I want to pay the insurance company directly',
+                  subtitle:
+                    'You’ll receive bills from the insurance company and it will be your responsibility to make sure they are paid to keep your coverage.',
+                  value: 'DIRECT',
+                },
+              ],
+            },
+          },
+        },
+      },
+    },
+  },
 };
 
 /*
