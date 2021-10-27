@@ -94,6 +94,9 @@ export const Workflow: React.FC<WorkflowProps> = ({ schemaUrl }) => {
   return (
     <div>
       <Title>{data.pageTitle}</Title>
+      <Title as="h3" size={17} weight={400}>
+        {data.pageDescription}
+      </Title>
       <Formik
         onSubmit={(values) => {
           console.log('Submitting', values);
