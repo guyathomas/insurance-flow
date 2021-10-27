@@ -37,15 +37,15 @@ export const customComponentMap: { [key in CustomFieldName]: React.FC } = {
   selectableRowGroup: (props) => <SelectableRowGroup {...props} />,
 };
 
-export const componentMap: { [key in FieldProperties['type']]: React.FC } = {
-  float32: (props) => <Input type="number" {...props} />,
-  float64: (props) => <Input type="number" {...props} />,
-  int8: (props) => <Input type="number" {...props} />,
-  uint8: (props) => <Input type="number" {...props} />,
-  int16: (props) => <Input type="number" {...props} />,
-  uint16: (props) => <Input type="number" {...props} />,
-  int32: (props) => <Input type="number" {...props} />,
-  uint32: (props) => <Input type="number" {...props} />,
+export const componentMap: { [key in FieldProperties['type']]: React.FC<{ onChange: any }> } = {
+  float32: (props) => <Input type="number" {...props} onChange={(value) => props.onChange(parseFloat(value))} />,
+  float64: (props) => <Input type="number" {...props} onChange={(value) => props.onChange(parseFloat(value))} />,
+  int8: (props) => <Input type="number" {...props} onChange={(value) => props.onChange(parseInt(value, 10))} />,
+  uint8: (props) => <Input type="number" {...props} onChange={(value) => props.onChange(parseInt(value, 10))} />,
+  int16: (props) => <Input type="number" {...props} onChange={(value) => props.onChange(parseInt(value, 10))} />,
+  uint16: (props) => <Input type="number" {...props} onChange={(value) => props.onChange(parseInt(value, 10))} />,
+  int32: (props) => <Input type="number" {...props} onChange={(value) => props.onChange(parseInt(value, 10))} />,
+  uint32: (props) => <Input type="number" {...props} onChange={(value) => props.onChange(parseInt(value, 10))} />,
   string: (props) => <Input type="text" {...props} />,
   timestamp: (props) => <Input type="date" {...props} />,
   boolean: (props) => <CheckboxRow label="" {...props} />,

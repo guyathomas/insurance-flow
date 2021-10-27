@@ -13,8 +13,8 @@ import { transformJTDSchema } from './schemaTransformer';
 import { componentMap, customComponentMap } from './componentMappers';
 
 const ajv = new Ajv({
-  keywords: ['label', 'order', 'customField', 'fieldProps'],
   allErrors: true,
+  strictSchema: false,
 });
 
 interface WorkflowProps {
