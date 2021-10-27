@@ -11,7 +11,8 @@ interface CompanyFormValues {
   FEIN: string;
   yearInBusiness: number;
   numberOfLocations: number;
-  // stateOfOperation: string[]
+  stateOfOperation: string[]
+}
 }
 
 export enum WorkersCompensationSteps {

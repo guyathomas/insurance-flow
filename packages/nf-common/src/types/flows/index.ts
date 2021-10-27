@@ -8,4 +8,5 @@ export type {
   Step,
   FieldProperties,
   FieldType,
+  CustomFieldName,
 } from "./common";

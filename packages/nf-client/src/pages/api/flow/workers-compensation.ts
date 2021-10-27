@@ -12,8 +12,11 @@ const stepMapper: WorkersCompensationStepMapper = {
     schema: {
       properties: {
         fullName: { type: 'string', metadata: { label: 'Full name', order: 1 } },
-        phoneNumber: { type: 'string', metadata: { label: 'Role', order: 2 } },
-        role: { type: 'string', metadata: { label: 'Phone number', order: 3 } },
+        role: { type: 'string', metadata: { label: 'Role', order: 2 } },
+        phoneNumber: {
+          type: 'string',
+          metadata: { label: 'Phone number', order: 3, fieldProps: { type: 'tel' } },
+        },
       },
     },
   },
@@ -23,14 +26,39 @@ const stepMapper: WorkersCompensationStepMapper = {
     previous: WorkersCompensationSteps.CONTACT,
     schema: {
       properties: {
-        companyName: { type: 'string', metadata: { label: 'Company name', order: 1 } },
+        companyName: {
+          type: 'string',
+          metadata: { label: 'Company name', order: 1, placeholder: 'This should exactly match the IRS records' },
+        },
         FEIN: {
           type: 'string',
           metadata: { label: 'What is your Federal Employer Identification Number? (FEIN)', order: 2 },
         },
         yearInBusiness: { type: 'int32', metadata: { label: 'Years in business', order: 3 } },
         numberOfLocations: { type: 'int32', metadata: { label: 'Number of locations', order: 4 } },
-        // statesOfOperation: { type: 'int32', metadata: { label: 'Number of locations', order: 1 } },
+        statesOfOperation: {
+          elements: {
+            type: 'string',
+          },
+          metadata: {
+            label: 'In which states do you operate?',
+            order: 5,
+            customField: 'advancedSelectInput',
+            fieldProps: {
+              isMulti: true,
+              options: [
+                {
+                  label: 'California',
+                  value: 'CA',
+                },
+                {
+                  label: 'Texas',
+                  value: 'TX',
+                },
+              ],
+            },
+          },
+        },
       },
     },
   },

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { SomeJTDSchemaType, Step, FieldProperties } from '@guyathomas/nf-common/lib/types';
+import { SomeJTDSchemaType, Step, FieldProperties, CustomFieldName } from '@guyathomas/nf-common/lib/types';
 import { Form, Formik } from 'formik';
 import Ajv from 'ajv/dist/jtd';
 import { Input } from '../input';
@@ -9,6 +9,7 @@ import sortBy from 'lodash/sortBy';
 import { Title } from '../title';
 import { Button } from '../button';
 import { useAxios, Request } from '../../hooks/axios';
+import { AdvancedSelectInput } from '../select-input/components/advanced-select-input';
 
 const ajv = new Ajv({
   keywords: ['label', 'order'],
@@ -61,6 +62,13 @@ interface GenericFieldProps {
   name: string;
   [key: string]: any;
 }
+
+const customComponentMap: { [key in CustomFieldName]: React.FC<GenericFieldProps> } = {
+  // eslint-disable-next-line
+  // @ts-ignore
+  // eslint-disable-next-line
+  advancedSelectInput: (props) => <AdvancedSelectInput {...props} />,
+};
 /* eslint-disable react/jsx-props-no-spreading */
 const componentMap: { [key in FieldProperties['type']]: React.FC<GenericFieldProps> } = {
   float32: (props) => <Input type="number" {...props} />,
@@ -124,9 +132,13 @@ export const Workflow: React.FC<WorkflowProps> = ({ schemaUrl }) => {
         {({ values, setFieldValue, errors }) => (
           <Form>
             {fieldProps.map(({ name, properties }) => {
-              const Component = componentMap[properties.type];
+              const { metadata = {} } = properties;
+
+              const Component = metadata.customField
+                ? customComponentMap[metadata.customField]
+                : componentMap[properties.type];
               return (
-                <Field fieldId={name} label={properties.metadata.label} error={errors[name]}>
+                <Field fieldId={name} label={metadata.label} error={errors[name]}>
                   <Component
                     fieldId={name}
                     name={name}
@@ -134,6 +146,8 @@ export const Workflow: React.FC<WorkflowProps> = ({ schemaUrl }) => {
                     onChange={(value) => {
                       setFieldValue(name, value);
                     }}
+                    /* eslint-disable-next-line */
+                    {...(metadata.fieldProps || {})}
                   />
                 </Field>
               );

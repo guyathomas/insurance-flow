@@ -18,9 +18,12 @@ export interface FieldProperties {
   metadata: SchemaFieldMetadata;
 }
 
+export type CustomFieldName = 'advancedSelectInput';
 interface SchemaFieldMetadata {
-  label: string;
+  label?: string;
   order?: number;
+  fieldProps?: Record<string, any>
+  customField?: CustomFieldName
 }
 
 // These types are unfortunately not exported by JTD
