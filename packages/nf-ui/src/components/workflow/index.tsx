@@ -2,12 +2,18 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { SomeJTDSchemaType, Step, FieldProperties } from '@guyathomas/nf-common/lib/types';
 import { Form, Formik } from 'formik';
+import Ajv from 'ajv/dist/jtd';
 import { Input } from '../input';
 import { Field } from '../field';
 import sortBy from 'lodash/sortBy';
 import { Title } from '../title';
 import { Button } from '../button';
 import { useAxios, Request } from '../../hooks/axios';
+
+const ajv = new Ajv({
+  keywords: ['label', 'order'],
+  allErrors: true,
+});
 
 function useStepData<T>(url: string): Request<T> {
   const router = useRouter();
@@ -95,14 +101,29 @@ export const Workflow: React.FC<WorkflowProps> = ({ schemaUrl }) => {
             router.push({ query: { step: data.next } }, undefined, { shallow: true });
           }
         }}
+        validateOnChange={false}
+        validateOnBlur
         initialValues={{}}
+        validate={(values) => {
+          const validate = ajv.compile(data.schema as any);
+          const valid = validate(values);
+          return valid
+            ? {}
+            : validate.errors.reduce((errorObject, validationError) => {
+                const fieldName = validationError.schemaPath.replace('/properties/', '');
+                return {
+                  ...errorObject,
+                  [fieldName]: validationError.message,
+                };
+              }, {});
+        }}
       >
-        {({ values, setFieldValue }) => (
+        {({ values, setFieldValue, errors }) => (
           <Form>
             {fieldProps.map(({ name, properties }) => {
               const Component = componentMap[properties.type];
               return (
-                <Field fieldId={name} label={properties.metadata.label}>
+                <Field fieldId={name} label={properties.metadata.label} error={errors[name]}>
                   <Component
                     fieldId={name}
                     name={name}
