@@ -51,7 +51,7 @@ export const Workflow: React.FC<WorkflowProps> = ({ schemaUrl }) => {
         }}
         validateOnChange={false}
         validateOnBlur
-        initialValues={{}}
+        initialValues={data.initialValues || {}}
         validate={(values) => {
           const validate = ajv.compile(data.schema as any);
           const valid = validate(values);
@@ -74,10 +74,6 @@ export const Workflow: React.FC<WorkflowProps> = ({ schemaUrl }) => {
                 ? customComponentMap[metadata.customField]
                 : componentMap[properties.type];
               const fieldError = errors[name];
-              if (!Object.hasOwnProperty.call(values, name)) {
-                // Initialize the values to false when they don't exist
-                setFieldValue(name, false);
-              }
               if (properties.type === 'boolean') {
                 return (
                   <>

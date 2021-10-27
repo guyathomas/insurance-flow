@@ -10,6 +10,7 @@ export interface Step<T> {
   schema: JTDSchemaType<T> | SomeJTDSchemaType;
   previous: string | null;
   next: string | null;
+  initialValues?: Partial<T>
 }
 
 

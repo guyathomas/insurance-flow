@@ -19,7 +19,7 @@ interface EmployeeFormValues {
   includeMedicalInsurance: boolean;
   includeRetirementPlan: boolean;
   includePaidVacation: boolean;
-  paidVacationDetails: string;
+  paidVacationDetails: string | null;
 }
 
 export enum WorkersCompensationSteps {
@@ -29,7 +29,7 @@ export enum WorkersCompensationSteps {
   PAY_PREFERENCES = "pay-preferences",
 }
 
-enum PayPreference {
+export enum PayPreference {
   NEWFRONT = "NEWFRONT",
   DIRECT = "DIRECT",
 }

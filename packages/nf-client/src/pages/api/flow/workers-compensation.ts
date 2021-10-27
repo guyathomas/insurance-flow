@@ -1,4 +1,9 @@
-import { WorkersCompensationSteps, WorkersCompensationStepMapper, ValueOf } from '@guyathomas/nf-common/lib/types';
+import {
+  WorkersCompensationSteps,
+  WorkersCompensationStepMapper,
+  ValueOf,
+  PayPreference,
+} from '@guyathomas/nf-common/lib/types';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const stepMapper: WorkersCompensationStepMapper = {
@@ -66,6 +71,12 @@ const stepMapper: WorkersCompensationStepMapper = {
     pageTitle: 'Tell us about your employees',
     next: WorkersCompensationSteps.PAY_PREFERENCES,
     previous: WorkersCompensationSteps.COMPANY,
+    initialValues: {
+      includeMedicalInsurance: false,
+      includeRetirementPlan: false,
+      includePaidVacation: true,
+      paidVacationDetails: null,
+    },
     schema: {
       properties: {
         clinicName: {
@@ -102,6 +113,7 @@ const stepMapper: WorkersCompensationStepMapper = {
             order: 6,
             label: 'Please provide details about the paid vacation',
           },
+          nullable: true,
         },
       },
     },
@@ -110,6 +122,9 @@ const stepMapper: WorkersCompensationStepMapper = {
     next: null,
     previous: WorkersCompensationSteps.EMPLOYEES,
     pageTitle: 'How do you want to pay for your policy?',
+    initialValues: {
+      paymentRecipient: PayPreference.NEWFRONT,
+    },
     schema: {
       properties: {
         paymentRecipient: {
