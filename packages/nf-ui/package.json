@@ -1,6 +1,6 @@
 {
   "name": "@guyathomas/nf-ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "UI Packages for newfront",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
@@ -17,7 +17,7 @@
     "compile": "yarn build"
   },
   "dependencies": {
-    "@guyathomas/nf-common": "1.0.0",
+    "@guyathomas/nf-common": "^1.0.1",
     "@reach/rect": "^0.10.3",
     "@types/react-image-fallback": "^8.0.1",
     "ajv": "^8.6.3",
