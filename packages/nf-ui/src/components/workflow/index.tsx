@@ -5,7 +5,7 @@ import { Form, Formik } from 'formik';
 import Ajv from 'ajv/dist/jtd';
 import { Title } from '../title';
 import { Button } from '../button';
-import { useStepData } from './useStepData';
+import { useSaveStep, useStepData } from './useStepData';
 import { schemaToFieldPropsMap } from './schemaToFieldProps';
 import { renderFieldMap } from './renderField';
 
@@ -21,6 +21,7 @@ interface WorkflowProps {
 export const Workflow: React.FC<WorkflowProps> = ({ schemaUrl }) => {
   const router = useRouter();
   const { data, loading, error } = useStepData<Step<SomeJTDSchemaType>>(schemaUrl);
+  const [saveStep, { loading: savingStep }] = useSaveStep<any>(schemaUrl);
 
   const allFieldProps = React.useMemo(
     () => data?.schemaType && schemaToFieldPropsMap[data.schemaType]?.(data?.schema),
@@ -43,14 +44,15 @@ export const Workflow: React.FC<WorkflowProps> = ({ schemaUrl }) => {
         {data.pageDescription}
       </Title>
       <Formik
-        onSubmit={(values) => {
-          console.log('Submitting', values);
-          if (data.next) {
+        onSubmit={async (values) => {
+          const { next, errors } = await saveStep({ data: values });
+          // TODO: Handle errors
+          if (next) {
             // Ideally this part would work as follows
             // 1. On submit, we do a POST to the route for this step.
             // That request will run server validation, and then return data.next which we then use to nav to the next route.
             // This allows us to determine on the server where the next path will lead, and can depend on the current form state.
-            router.push({ query: { step: data.next } }, undefined, { shallow: true });
+            router.push({ query: { step: next } }, undefined, { shallow: true });
           }
         }}
         validateOnChange={false}
@@ -86,7 +88,9 @@ export const Workflow: React.FC<WorkflowProps> = ({ schemaUrl }) => {
                 Back
               </Button>
             )}
-            <Button type="submit">{data.next ? 'Next' : 'Finish'}</Button>
+            <Button type="submit" loading={savingStep}>
+              Next
+            </Button>
           </Form>
         )}
       </Formik>

@@ -13,9 +13,13 @@ export interface Step<T> {
   pageDescription?: string;
   schema: JTDSchemaType<T> | SomeJTDSchemaType;
   previous: string | null;
-  next: string | null;
   initialValues?: Partial<T>;
   schemaType: SchemaType;
+}
+
+export interface SaveStep {
+  next: string | null;
+  errors?: Record<string, string[]>;
 }
 
 

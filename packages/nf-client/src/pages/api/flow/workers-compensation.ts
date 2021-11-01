@@ -1,11 +1,27 @@
 import {
   WorkersCompensationSteps,
   WorkersCompensationStepMapper,
+  SaveStepMapper,
   ValueOf,
   PayPreference,
 } from '@guyathomas/nf-common/lib/types';
 import { SchemaType } from '@guyathomas/nf-common/lib/types/flows/common';
 import type { NextApiRequest, NextApiResponse } from 'next';
+
+const saveStepMapper: SaveStepMapper = {
+  contact: {
+    next: WorkersCompensationSteps.COMPANY,
+  },
+  company: {
+    next: WorkersCompensationSteps.EMPLOYEES,
+  },
+  employees: {
+    next: WorkersCompensationSteps.PAY_PREFERENCES,
+  },
+  'pay-preferences': {
+    next: null,
+  },
+};
 
 const stepMapper: WorkersCompensationStepMapper = {
   contact: {
@@ -13,7 +29,6 @@ const stepMapper: WorkersCompensationStepMapper = {
     pageDescription:
       // eslint-disable-next-line max-len
       'This person will receive all communications from Newfront about this policy. You can change this contact information later. If you’re not sure, just add your contact information.',
-    next: WorkersCompensationSteps.COMPANY,
     previous: null,
     schemaType: SchemaType.JTD,
     schema: {
@@ -29,7 +44,6 @@ const stepMapper: WorkersCompensationStepMapper = {
   },
   company: {
     pageTitle: 'Tell us about your company',
-    next: WorkersCompensationSteps.EMPLOYEES,
     previous: WorkersCompensationSteps.CONTACT,
     schemaType: SchemaType.JTD,
     schema: {
@@ -72,7 +86,6 @@ const stepMapper: WorkersCompensationStepMapper = {
   },
   employees: {
     pageTitle: 'Tell us about your employees',
-    next: WorkersCompensationSteps.PAY_PREFERENCES,
     previous: WorkersCompensationSteps.COMPANY,
     initialValues: {
       includeMedicalInsurance: false,
@@ -123,7 +136,6 @@ const stepMapper: WorkersCompensationStepMapper = {
     },
   },
   'pay-preferences': {
-    next: null,
     previous: WorkersCompensationSteps.EMPLOYEES,
     pageTitle: 'How do you want to pay for your policy?',
     initialValues: {
@@ -174,7 +186,7 @@ export default (req: NextApiRequest, res: NextApiResponse<ValueOf<WorkersCompens
     case 'POST':
       // TODO: Validate with AJV here
       // TODO save step values here
-      res.status(200).end();
+      res.json(saveStepMapper[currentStep]);
       break;
     default:
       res.status(404).end();

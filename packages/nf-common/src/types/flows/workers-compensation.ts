@@ -11,7 +11,7 @@ interface CompanyFormValues {
   FEIN: string;
   yearInBusiness: number;
   numberOfLocations: number;
-  stateOfOperation: string[]
+  stateOfOperation: string[];
 }
 
 interface EmployeeFormValues {
@@ -43,4 +43,8 @@ export type WorkersCompensationStepMapper = {
   [WorkersCompensationSteps.COMPANY]: Step<CompanyFormValues>;
   [WorkersCompensationSteps.EMPLOYEES]: Step<EmployeeFormValues>;
   [WorkersCompensationSteps.PAY_PREFERENCES]: Step<PayPreferencesForm>;
+};
+
+export type SaveStepMapper = {
+  [key in WorkersCompensationSteps]: { errors?: string[]; next: string | null };
 };
