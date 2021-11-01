@@ -1,7 +1,8 @@
 import { SomeJTDSchemaType, FieldProperties } from '@guyathomas/nf-common/lib/types';
+import { SchemaType } from '@guyathomas/nf-common/lib/types/flows/common';
 import sortBy from 'lodash/sortBy';
 
-interface FieldProps {
+export interface FieldProps {
   name: string;
   properties: FieldProperties;
 }
@@ -12,7 +13,7 @@ const makeFieldProperties = (schemaProperties = {}): FieldProps[] =>
     properties,
   }));
 
-export const transformJTDSchema = (schema?: SomeJTDSchemaType): FieldProps[] => {
+const transformJTDSchema = (schema?: SomeJTDSchemaType): FieldProps[] => {
   if (!schema) return [];
   if ('properties' in schema || 'optionalProperties' in schema) {
     return sortBy(
@@ -21,4 +22,8 @@ export const transformJTDSchema = (schema?: SomeJTDSchemaType): FieldProps[] => 
     );
   }
   return [];
+};
+
+export const schemaToFieldPropsMap: Record<SchemaType, (schema: any) => FieldProps[]> = {
+  JTD: transformJTDSchema,
 };

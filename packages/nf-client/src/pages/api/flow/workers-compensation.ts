@@ -4,6 +4,7 @@ import {
   ValueOf,
   PayPreference,
 } from '@guyathomas/nf-common/lib/types';
+import { SchemaType } from '@guyathomas/nf-common/lib/types/flows/common';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const stepMapper: WorkersCompensationStepMapper = {
@@ -14,6 +15,7 @@ const stepMapper: WorkersCompensationStepMapper = {
       'This person will receive all communications from Newfront about this policy. You can change this contact information later. If you’re not sure, just add your contact information.',
     next: WorkersCompensationSteps.COMPANY,
     previous: null,
+    schemaType: SchemaType.JTD,
     schema: {
       properties: {
         fullName: { type: 'string', metadata: { label: 'Full name', order: 1 } },
@@ -29,6 +31,7 @@ const stepMapper: WorkersCompensationStepMapper = {
     pageTitle: 'Tell us about your company',
     next: WorkersCompensationSteps.EMPLOYEES,
     previous: WorkersCompensationSteps.CONTACT,
+    schemaType: SchemaType.JTD,
     schema: {
       properties: {
         companyName: {
@@ -77,6 +80,7 @@ const stepMapper: WorkersCompensationStepMapper = {
       includePaidVacation: true,
       paidVacationDetails: null,
     },
+    schemaType: SchemaType.JTD,
     schema: {
       properties: {
         clinicName: {
@@ -125,6 +129,7 @@ const stepMapper: WorkersCompensationStepMapper = {
     initialValues: {
       paymentRecipient: PayPreference.NEWFRONT,
     },
+    schemaType: SchemaType.JTD,
     schema: {
       properties: {
         paymentRecipient: {

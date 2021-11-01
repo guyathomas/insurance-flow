@@ -4,13 +4,18 @@ export type ValueOf<T> = T[keyof T];
 
 export type { SomeJTDSchemaType };
 
+export enum SchemaType {
+  JTD = "JTD",
+}
+
 export interface Step<T> {
   pageTitle: string;
   pageDescription?: string;
   schema: JTDSchemaType<T> | SomeJTDSchemaType;
   previous: string | null;
   next: string | null;
-  initialValues?: Partial<T>
+  initialValues?: Partial<T>;
+  schemaType: SchemaType;
 }
 
 

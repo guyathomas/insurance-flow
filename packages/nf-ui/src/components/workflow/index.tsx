@@ -3,14 +3,11 @@ import { useRouter } from 'next/router';
 import { SomeJTDSchemaType, Step } from '@guyathomas/nf-common/lib/types';
 import { Form, Formik } from 'formik';
 import Ajv from 'ajv/dist/jtd';
-import { Field } from '../field';
 import { Title } from '../title';
 import { Button } from '../button';
-import { CheckboxRow } from '../checkbox-row';
-import { Text } from '../text';
 import { useStepData } from './useStepData';
-import { transformJTDSchema } from './schemaTransformer';
-import { componentMap, customComponentMap } from './componentMappers';
+import { schemaToFieldPropsMap } from './schemaToFieldProps';
+import { renderFieldMap } from './renderField';
 
 const ajv = new Ajv({
   allErrors: true,
@@ -25,7 +22,10 @@ export const Workflow: React.FC<WorkflowProps> = ({ schemaUrl }) => {
   const router = useRouter();
   const { data, loading, error } = useStepData<Step<SomeJTDSchemaType>>(schemaUrl);
 
-  const fieldProps = React.useMemo(() => transformJTDSchema(data?.schema), [data?.schema]);
+  const allFieldProps = React.useMemo(
+    () => data?.schemaType && schemaToFieldPropsMap[data.schemaType]?.(data?.schema),
+    [data?.schema, data?.schemaType],
+  );
 
   if (loading || !data?.pageTitle) return <div>Loading</div>;
   if (error) {
@@ -46,6 +46,10 @@ export const Workflow: React.FC<WorkflowProps> = ({ schemaUrl }) => {
         onSubmit={(values) => {
           console.log('Submitting', values);
           if (data.next) {
+            // Ideally this part would work as follows
+            // 1. On submit, we do a POST to the route for this step.
+            // That request will run server validation, and then return data.next which we then use to nav to the next route.
+            // This allows us to determine on the server where the next path will lead, and can depend on the current form state.
             router.push({ query: { step: data.next } }, undefined, { shallow: true });
           }
         }}
@@ -66,50 +70,12 @@ export const Workflow: React.FC<WorkflowProps> = ({ schemaUrl }) => {
               }, {});
         }}
       >
-        {({ values, setFieldValue, errors }) => (
+        {(formikProps) => (
           <Form>
-            {fieldProps.map(({ name, properties }) => {
-              const { metadata = {} } = properties;
-              const Component = metadata.customField
-                ? customComponentMap[metadata.customField]
-                : componentMap[properties.type];
-              const fieldError = errors[name];
-              if (properties.type === 'boolean') {
-                return (
-                  <>
-                    {fieldError && (
-                      <Text color="error" size="small" data-testid={`field:error:${name}`}>
-                        {error}
-                      </Text>
-                    )}
-                    <CheckboxRow
-                      fieldId={name}
-                      name={name}
-                      label={metadata.label}
-                      isActive={values[name] || null}
-                      onClick={(value) => {
-                        setFieldValue(name, value);
-                      }}
-                      /* eslint-disable-next-line */
-                      {...(metadata.fieldProps || {})}
-                    />
-                  </>
-                );
-              }
-              return (
-                <Field fieldId={name} label={metadata.label} error={fieldError}>
-                  <Component
-                    fieldId={name}
-                    name={name}
-                    value={values[name]}
-                    onChange={(value) => {
-                      setFieldValue(name, value);
-                    }}
-                    /* eslint-disable-next-line */
-                    {...(metadata.fieldProps || {})}
-                  />
-                </Field>
-              );
+            {allFieldProps.map((fieldProps) => {
+              const res = renderFieldMap[data.schemaType](fieldProps, formikProps);
+              console.log('zzz', renderFieldMap[data.schemaType]);
+              return res;
             })}
             {data.previous && (
               <Button
